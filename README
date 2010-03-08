@@ -1,15 +1,19 @@
 Introducing jMailFinch
 ----------------------
 
-MailFinch is snail-mail made easy. Send physical letters, invoices, receipts, and anything else. For more information, see the website: https://www.mailfinch.com
+MailFinch is snail-mail made easy. Send physical letters, invoices, receipts, and anything else.
+For more information, see the website: https://www.mailfinch.com
 
-jMailFinch implements an object-oriented Java interface to the MailFinch mailing API, allowing you to create, manage, and send your letters.
+jMailFinch implements an object-oriented Java interface to the MailFinch mailing API,
+allowing you to create, manage, and send your letters.
 
 
 Installation
 ------------
 
-In order to use jMailFinch, you can simply download the JAR (see the "Downloads" page) with or without source code, and add it to your project! Alternatively, you can save the Java source files and add them directly to your project.
+In order to use jMailFinch, you can simply download the JAR (see the "Downloads" page)
+with or without source code, and add it to your project!
+Alternatively, you can save the Java source files and add them directly to your project.
 
 
 Getting Started
@@ -101,6 +105,7 @@ for (Letter letter : mail.getAllLetters()) {
 		letter.purchase();
 		System.out.println("Just bought " + letter.getID() + "!");
 	} catch (MailFinchException e) {
-		System.out.println("Letter " + letter.getID() + "can't be bought. Has the mailing date already passed?");
+		System.out.println("Letter " + letter.getID()
+				+ "can't be bought. Has the mailing date already passed?");
 	}
 }
