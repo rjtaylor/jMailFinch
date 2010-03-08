@@ -1,0 +1,114 @@
+h1. Introducing the jMailFinch library
+
+MailFinch is snail-mail made easy. Send physical letters, invoices, receipts, and anything else.
+
+jMailFinch implements an object-oriented Java interface to the MailFinch mailing API, allowing you to create, manage, and send your letters.
+
+h2. Getting Started (QUICK!)
+
+jMailFinch has only a few things you really need to worry about:
+
+# MailFinch
+# Letter
+# Address
+
+
+Once you know even just the basics of those three, you will be able to use jMailFinch quite easily.
+
+h3. MailFinch
+
+bc. MailFinch mail = new MailFinch('api-key-goes-here');
+
+Hey! We have a MailFinch object!
+
+From there, we can *create a new letter*:
+
+bc. Letter newLetter = mail.newLetter();
+
+We can also *get all the letters* in our account:
+
+bc. ArrayList<Letter> allLetters = mail.getAllLetters();
+
+Or we could *get an existing letter*:
+
+bc. Letter existingLetter = mail.getLetter(123); // Put your own letter ID here.
+
+h3. Address
+
+Even though the bulk of MailFinch is about letters, you can't really do anything without addresses, here we go!
+
+bc. Address address = new Address();
+address.setName("Mr. President");
+address.setStreet1("1600 Pennsylvania Avenue NW");
+// address.setStreet2("Apt. #4"); // This is optional.
+address.setCity("Washington");
+address.setState("DC");
+address.setZip("20500");
+address.setCountry("United States of America"); // This is optional.
+
+*WAIT!* Who did I just send that to?
+
+Oh yeah...
+
+bc. address.getName();
+address.getStreet1();
+address.getStreet2();
+address.getCity();
+address.getState();
+address.getZip();
+address.getCountry();
+
+Is that a valid address?
+
+bc. address.isValid(); // Maybe!
+
+
+h3. Letter
+
+Alright! We've got a MailFinch object and an address, let's make us a letter! (oh wait you have one - newLetter, remember?)
+
+bc. // Set the PDF location for this letter.
+// (Psst: It has to be a valid PDF!)
+newLetter.setDocumentURL("http://www.irs.gov/pub/irs-pdf/fw9.pdf");
+// You can use the same address if you would like.
+newLetter.setSender(address);
+// Hehe, you're sending yourself a tax form.
+newLetter.setRecipient(address); 
+
+Date mailingDate = new Date(); // Get the current date.
+newLetter.setMailingDate(mailingDate); // This is when we'll send the letter.
+// Let's save it into the system!
+if (newLetter.save()) {
+	// Buy that baby..
+	if (newLetter.purchase()) {
+		// Woohoo!
+	} else {
+		// Epic fail!
+	}
+} else {
+	// Lame!
+}
+//
+// Get the status of the letter.
+String status = newLetter.getStatus();
+
+
+Need to refer to it later? Save the ID!
+
+bc. int id = newLetter.getID();
+
+*Hey! You did it!*
+
+h2. Just a few more examples...
+
+h3. Purchase All Your Letters
+
+bc. // Hey, this could get pricey...
+for (Letter letter : mail.getAllLetters()) {
+	try {
+		letter.purchase();
+		System.out.println("Just bought " + letter.getID() + "!");
+	} catch (MailFinchException e) {
+		System.out.println("Letter " + letter.getID() + "can't be bought. Has the mailing date already passed?");
+	}
+}
