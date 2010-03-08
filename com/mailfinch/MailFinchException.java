@@ -7,7 +7,7 @@ package com.mailfinch;
  */
 public class MailFinchException extends Exception {
 
-	/**	The universal version identifier of this class. */
+	/** The universal version identifier of this class. */
 	private static final long serialVersionUID = 1L;
 
 	/**
