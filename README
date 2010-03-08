@@ -1,43 +1,45 @@
-h1. Introducing the jMailFinch library
+Introducing jMailFinch
+----------------------
 
-MailFinch is snail-mail made easy. Send physical letters, invoices, receipts, and anything else.
+MailFinch is snail-mail made easy. Send physical letters, invoices, receipts, and anything else. For more information, see the website: https://www.mailfinch.com
 
 jMailFinch implements an object-oriented Java interface to the MailFinch mailing API, allowing you to create, manage, and send your letters.
 
-h2. Getting Started (QUICK!)
 
-jMailFinch has only a few things you really need to worry about:
+Getting Started
+---------------
 
-# MailFinch
-# Letter
-# Address
+jMailFinch contains only a few classes that are important to you:
+
+* MailFinch - Your main access point to the library.
+* Letter - Provides access to the data and functionality of a single letter.
+* Address - Contains the various fields of an address.
+* MailFinchException - An exception thrown by the library when errors occur.
+
+Once you know the basics of the above classes, you will be able to use jMailFinch very easily.
 
 
-Once you know even just the basics of those three, you will be able to use jMailFinch quite easily.
+The MailFinch Class
+-------------------
 
-h3. MailFinch
+// Instantiate a new MailFinch object with the following code:
+MailFinch mail = new MailFinch('api-key-goes-here');
 
-bc. MailFinch mail = new MailFinch('api-key-goes-here');
+// Now we can create a new letter easily:
+Letter newLetter = mail.newLetter();
 
-Hey! We have a MailFinch object!
+// We can also get all the letters in our account:
+ArrayList<Letter> allLetters = mail.getAllLetters();
 
-From there, we can *create a new letter*:
+// Or we could get an existing letter by its ID number:
+Letter existingLetter = mail.getLetter(123);
 
-bc. Letter newLetter = mail.newLetter();
 
-We can also *get all the letters* in our account:
+The Address Class
+-----------------
 
-bc. ArrayList<Letter> allLetters = mail.getAllLetters();
-
-Or we could *get an existing letter*:
-
-bc. Letter existingLetter = mail.getLetter(123); // Put your own letter ID here.
-
-h3. Address
-
-Even though the bulk of MailFinch is about letters, you can't really do anything without addresses, here we go!
-
-bc. Address address = new Address();
+// Let's create a new address structure:
+Address address = new Address();
 address.setName("Mr. President");
 address.setStreet1("1600 Pennsylvania Avenue NW");
 // address.setStreet2("Apt. #4"); // This is optional.
@@ -46,11 +48,8 @@ address.setState("DC");
 address.setZip("20500");
 address.setCountry("United States of America"); // This is optional.
 
-*WAIT!* Who did I just send that to?
-
-Oh yeah...
-
-bc. address.getName();
+// If we need to retrieve those fields again, we can do so via the following method:
+address.getName();
 address.getStreet1();
 address.getStreet2();
 address.getCity();
@@ -58,52 +57,38 @@ address.getState();
 address.getZip();
 address.getCountry();
 
-Is that a valid address?
+// Is this a valid address?
+address.isValid();
 
-bc. address.isValid(); // Maybe!
 
+The Letter Class
+----------------
 
-h3. Letter
-
-Alright! We've got a MailFinch object and an address, let's make us a letter! (oh wait you have one - newLetter, remember?)
-
-bc. // Set the PDF location for this letter.
-// (Psst: It has to be a valid PDF!)
-newLetter.setDocumentURL("http://www.irs.gov/pub/irs-pdf/fw9.pdf");
-// You can use the same address if you would like.
+// Now that we have our main MailFinch object and an Address structure, let's make a complete Letter:
+newLetter.setDocumentURL("http://www.irs.gov/pub/irs-pdf/fw9.pdf"); // This must be a valid PDF document.
 newLetter.setSender(address);
-// Hehe, you're sending yourself a tax form.
-newLetter.setRecipient(address); 
+newLetter.setRecipient(address);
 
-Date mailingDate = new Date(); // Get the current date.
-newLetter.setMailingDate(mailingDate); // This is when we'll send the letter.
-// Let's save it into the system!
-if (newLetter.save()) {
-	// Buy that baby..
-	if (newLetter.purchase()) {
-		// Woohoo!
-	} else {
-		// Epic fail!
-	}
-} else {
-	// Lame!
-}
-//
-// Get the status of the letter.
+// Let's set the letter's mailing date to today:
+Date mailingDate = new Date();
+newLetter.setMailingDate(mailingDate);
+
+// Finally, let's save the letter onto the MailFinch system and try to purchase it!
+newLetter.save();
+newLetter.purchase();
+
+// We can check the status of the letter:
 String status = newLetter.getStatus();
+System.out.println(status);
+
+// We can also get the letter's assigned ID for future reference:
+int id = newLetter.getID();
 
 
-Need to refer to it later? Save the ID!
+Just a few more examples...
+---------------------------
 
-bc. int id = newLetter.getID();
-
-*Hey! You did it!*
-
-h2. Just a few more examples...
-
-h3. Purchase All Your Letters
-
-bc. // Hey, this could get pricey...
+// Purchase every letter (this could get pricey!):
 for (Letter letter : mail.getAllLetters()) {
 	try {
 		letter.purchase();
