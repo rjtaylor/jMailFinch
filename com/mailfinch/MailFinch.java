@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import com.mailfinch.api.AbstractMailFinchConnection;
 import com.mailfinch.api.JSONConnection;
+import com.mailfinch.api.MailFinchConnection;
 
 /**
  * The main class within the MailFinch library,
@@ -80,10 +80,11 @@ public class MailFinch {
 	 */
 	public ArrayList<Letter> getAllLetters() throws MailFinchException {
 		try {
-			JSONArray json = new JSONArray(getAPI().execute("letters", "GET"));
+			MailFinchConnection.Response response = getAPI().execute("letters", "GET");
+			JSONArray array = response.getArray();
 			ArrayList<Letter> letters = new ArrayList<Letter>();
-			for (int i = 0; i < json.length(); i++) {
-				JSONObject letter = json.getJSONObject(i);
+			for (int i = 0; i < array.length(); i++) {
+				JSONObject letter = array.getJSONObject(i);
 				letters.add(Letter.fromJSON(getConfiguration(), letter.getJSONObject("letter")));
 			}
 			return letters;
@@ -100,8 +101,8 @@ public class MailFinch {
 	 */
 	public Letter getLetter(int id) throws MailFinchException {
 		try {
-			JSONObject json = new JSONObject(getAPI().execute("letters/" + id, "GET"));
-			return Letter.fromJSON(getConfiguration(), json.getJSONObject("letter"));
+			MailFinchConnection.Response response = getAPI().execute("letters/" + id, "GET");
+			return Letter.fromJSON(getConfiguration(), response.getObject().getJSONObject("letter"));
 		} catch (JSONException e) {
 			throw new MailFinchException(Resources.INVALID_JSON, e);
 		}
