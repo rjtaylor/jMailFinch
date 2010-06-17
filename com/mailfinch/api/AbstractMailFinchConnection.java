@@ -39,9 +39,10 @@ public abstract class AbstractMailFinchConnection implements MailFinchConnection
 	 * Makes a request to the specified MailFinch method.
 	 * @param apiMethod The method to execute on the API.
 	 * @param requestMethod The request method (GET, PUT, POST, or DELETE).
+	 * @return The {@link MailFinchConnection.Response} representing the server response.
 	 * @throws MailFinchException If a networking error has occurred.
 	 */
-	public String execute(String apiMethod, String requestMethod) throws MailFinchException {
+	public MailFinchConnection.Response execute(String apiMethod, String requestMethod) throws MailFinchException {
 		return execute(apiMethod, requestMethod, new HashMap<String, Object>());
 	}
 	
@@ -52,12 +53,14 @@ public abstract class AbstractMailFinchConnection implements MailFinchConnection
 	 * @param parameters The parameters for the request.
 	 * If making a GET request, this must be a mapping of strings to strings,
 	 * containing the URL query data. Otherwise, this mapping should contain JSON data.
+	 * @return The {@link MailFinchConnection.Response} representing the server response.
 	 * @throws MailFinchException If a networking error has occurred.
 	 */
-	public String execute(String apiMethod, String requestMethod, Map<String, Object> parameters) throws MailFinchException {
+	public MailFinchConnection.Response execute(String apiMethod, String requestMethod, Map<String, Object> parameters) throws MailFinchException {
 		String url = buildURL(apiMethod);
 		parameters.put("api_key", configuration.getAPIKey());
-		return getContents(url, requestMethod, parameters);
+		String response = getContents(url, requestMethod, parameters);
+		return new MailFinchConnection.Response(response);
 	}
  
 	/**
