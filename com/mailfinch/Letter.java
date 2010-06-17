@@ -39,6 +39,9 @@ public class Letter {
 	
 	/** The address of the recipient. */
 	private Address recipientAddress;
+	
+	/** The email address of the sender. */
+	private String emailAddress;
 
 	/**
 	 * Initialises a new instance of the {@link Letter} class.
@@ -167,6 +170,22 @@ public class Letter {
 	public void setRecipient(Address recipient) {
 		recipientAddress = recipient;
 	}
+
+	/**
+	 * Gets the email address of the sender.
+	 * @return The email address of the sender.
+	 */
+	public String getEmail() {
+		return emailAddress;
+	}
+
+	/**
+	 * Sets the email address of the sender.
+	 * @param email The email address of the sender.
+	 */
+	public void setEmail(String email) {
+		emailAddress = email;
+	}
 	
 	/**
 	 * Gets the time and date at which this letter was sent.
@@ -253,6 +272,11 @@ public class Letter {
 				letter.recipientAddress = Address.fromJSON(json.getJSONObject("recipient"));
 			}
 			
+			// Get the sender's email, if it exists in the JSON data.
+			if (!json.isNull("email")) {
+				letter.emailAddress = json.getString("email");
+			}
+			
 			// Get the letter's mailing date, if it exists in the JSON data.
 			if (!json.isNull("mailing_date")) {
 				letter.mailingDate = DateConverter.parse(json.getString("mailing_date"));
@@ -297,6 +321,10 @@ public class Letter {
 			letterData.put("recipient_attributes", getRecipient().getData());
 		}
 		
+		if (getEmail() != null) {
+			letterData.put("email", getEmail());
+		}
+		
 		if (getMailingDate() != null) {
 			data.put("mailing_year", DateConverter.getYear(getMailingDate()));
 			data.put("mailing_month", DateConverter.getMonth(getMailingDate()));
@@ -318,9 +346,9 @@ public class Letter {
 		try {
 			JSONObject json;
 			if (method == "GET") {
-				json = new JSONObject(configuration.getConnection().execute(url, method));
+				json = configuration.getConnection().execute(url, method).getObject();
 			} else {
-				json = new JSONObject(configuration.getConnection().execute(url, method, getData()));
+				json = configuration.getConnection().execute(url, method, getData()).getObject();
 			}
 			JSONObject letter = json.getJSONObject("letter");
 			id = letter.getInt("id");
